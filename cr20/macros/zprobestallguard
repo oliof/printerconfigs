@@ -1,0 +1,43 @@
+; 2_ZStallProbe.g
+;
+; Uses the Z axis StallGuard detection as a Z-Probe
+;
+
+M291 P"Are you sure you want to proceed?" R"StallGuard Z-Probe" S3
+
+             			; absolute positioning
+G1  X110 Y110 Z3 F4000 			; Always probe on the same spot
+M558 P10 H5 F400 T6000	A10 R0.1 S0.005    	; Enable Stall Z probe
+G31 X0 Y0 Z0 P100           		; Set Z probe trigger value, offset and trigger offset (overshoot due to springs)
+M574 Z1 S3         	    		; set Z-min to use motor StallGuard
+M913 Z20   		      		; reduce motor current to 20%
+M201 Z30				; Reduce acceleration mm/s2
+M915 Z S5 F0 R0				; Set StallGuard sensitivity for endstop homing
+
+M291 P"StallGuard Z-Probe Settings Loaded. Proceed with Probe?" R"Yes or No?" S3
+
+G30 S-1					; Find the bed Z=0 reference
+G1 Z3
+G30 S-1 				; do a couple of repeatability tests
+G1 Z3
+G30 S-1
+G1 Z3
+G30 S-1
+G1 Z3
+G30 S-1
+G1 Z3
+G30 S-1					; Find the bed Z=0 reference
+G1 Z3
+G30 S-1 				; do a couple of repeatability tests
+G1 Z3
+G30 S-1
+G1 Z3
+G30 S-1
+G1 Z3
+G30 S-1
+G1 Z3
+
+M291 P"Probing complete. Restoring settings." S3
+
+M913 Z100   		      				; restore current to 100%
+M201 Z100 						; Restore acceleration

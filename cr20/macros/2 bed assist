@@ -1,0 +1,4 @@
+M671 X-83:-83:92 Y-92:83:0 P0.7 ; M4x40 screws on the Creality bed, thread pitch 0.7
+G30 P2 X92 Y0 Z-9999
+G30 P0 X-83 Y-92 Z-99999
+G30 P1 X-83 Y83 Z-99999 S3

@@ -1,0 +1,4 @@
+; do nothing, probing is currently broken
+
+;G30 P0 X80 Y0 Z-99999
+;G30 P1 X80 Y0 Z-99999 S2
