@@ -1,0 +1,13 @@
+; Sensorless Homing test file for RepRapFirmware on Kossel
+M400                    ; make sure everything has stopped before we make changes
+M574 X1 Y1 S2           ; set endstops to use motor stall
+M913 X10 Y10            ; reduce motor current to 50% to prevent belts slipping
+M915 P0:1 F0 S10        ; set up stall detection
+G91                      ; use relative positioning
+G0 X10  H2              ; make some space
+G1 H1 X-600 Y-600 F4000  ; move all carriage, stopping at the endstops
+G90                     ; back to absolute positioning
+M574 X1 Y1 S2 R2        ; pause on stall detection
+G0 X0 F2400             ; center stage
+M400                    ; make sure everything has stopped before we reset the motor currents
+M913 X100 Y100 Z100     ; motor currents back to normal
