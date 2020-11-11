@@ -1,3 +1,0 @@
-2018-06-01 08:54:04 Event logging started
-2018-06-01 08:54:27 HTTP client 192.168.1.74 login succeeded
-2018-06-01 08:56:30 Warning: VIN under-voltage event (5.5V)

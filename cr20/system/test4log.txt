@@ -1,2 +1,0 @@
-2018-11-05 21:41:09 Event logging started
-2018-11-05 21:44:12 Event logging stopped
