@@ -9,24 +9,17 @@ M83                                                    ; ...but relative extrude
 M550 P"minion"                                         ; set printer name
 
 ; global variables for config and macros
-
-global probe_x_offset=-30
-global probe_y_offset=-15
-global probe_z_offset=2.755
-global mesh_points=5
-global x_axis_min=-90
-global y_axis_min=-90
-global z_axis_min=0
-global x_axis_max=90
-global y_axis_max=90
-global z_axis_max=180
-
+M98 P"variables"
 
 ; Network
 M552 S1                                                ; enable network
 M586 P0 S1                                             ; enable HTTP
 M586 P1 S0                                             ; disable FTP
 M586 P2 S0                                             ; disable Telnet
+
+; Kinematics
+
+M669 K0
 
 ; Drives
 M569 P0 S0                                             ; physical drive 0 goes backwards using TMC2209 driver timings
@@ -52,8 +45,9 @@ M574 Y2 S3                                             ; configure sensorless en
 M574 Z1 S2                                             ; configure Z-probe endstop for low end on Z
 
 ; Z-Probe
-M558 P5 C"!^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds
-G31 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
+M558 K0 P5 C"!^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds
+G31 K0 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
+
 ; define mesh grid
 M557 X{global.x_axis_min+5,global.x_axis_max+sensors.probes[0].offsets[0]-1} Y{global.y_axis_min+5,global.y_axis_max+sensors.probes[0].offsets[1]-1} P{global.mesh_points}
 ; Heaters
@@ -94,7 +88,10 @@ G4 S1                                                  ; wait
 M918 P1 E4 F100000                                     ; enable screen to redraw cleanly
 M572 D0 S0.04                                          ; smidge of pressure advance
 T0                                                     ; select first tool
-M955 P0 C"E.10+E.7" I20                                ; enable accelerometer
+if global.accelerometer
+    M955 P0 C"E.10+E.7" I20                                ; enable accelerometer
+else
+    echo "skipping accelerometer configuration"
 G4 S1                                                  ; allow everything to settle
 
 ;; InputShaping for X

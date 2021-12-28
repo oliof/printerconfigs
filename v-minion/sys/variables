@@ -1,0 +1,68 @@
+; global configuration variables
+
+var probe_x_offset = -30
+var probe_y_offset = -15
+var probe_z_offset = 1.6
+var mesh_points = 7
+var x_axis_min=-90
+var y_axis_min=-90
+var z_axis_min=0
+var x_axis_max=90
+var y_axis_max=90
+var z_axis_max=180
+var accelerometer = false
+
+if !exists(global.probe_x_offset)
+  global probe_x_offset = var.probe_x_offset
+else
+  set global.probe_x_offset = var.probe_x_offset
+
+if !exists(global.probe_y_offset)
+    global probe_y_offset = var.probe_x_offset
+else
+    set global.probe_x_offset = var.probe_x_offset
+	
+if !exists(global.probe_z_offset)
+    global probe_z_offset = var.probe_z_offset
+else
+    set global.probe_z_offset = var.probe_z_offset
+
+if !exists(global.mesh_points)
+    global mesh_points = var.mesh_points
+else
+    set global.mesh_points = var.mesh_points
+
+if !exists(global.x_axis_min)
+    global x_axis_min = var.x_axis_min
+else
+    set global.x_axis_min = var.x_axis_min
+	
+if !exists(global.y_axis_min)
+    global y_axis_min = var.y_axis_min
+else
+    set global.y_axis_min = var.y_axis_min
+
+if !exists(global.z_axis_min)
+    global z_axis_min = var.z_axis_min
+else
+    set global.z_axis_min = var.z_axis_min
+
+if !exists(global.x_axis_max)
+    global x_axis_max = var.x_axis_max
+else
+    set global.x_axis_max = var.x_axis_max
+
+if !exists(global.y_axis_max)
+    global y_axis_max = var.y_axis_max
+else
+    set global.y_axis_max = var.y_axis_max
+
+if !exists(global.z_axis_max)
+    global z_axis_max = var.z_axis_max
+else
+    set global.z_axis_max = var.z_axis_max
+	
+if !exists(global.accelerometer)
+    global accelerometer = var.accelerometer
+else
+    set global.accelerometer = var.accelerometer
