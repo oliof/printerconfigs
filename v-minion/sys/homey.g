@@ -1,11 +1,6 @@
 ; homey.g
 ; called to home the Y axis
-;
-; homex.g
-; called to home the X axis
-; homex.g
-; called to home the X axis
-;
+
 M400                   ; Wait for all moves to stop
 G91                    ; Use relative moves
 M569 P1 V60            ; disable spreadcycle switching
