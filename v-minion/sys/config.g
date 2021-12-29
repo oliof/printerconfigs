@@ -46,28 +46,25 @@ M574 Z1 S2                                             ; configure Z-probe endst
 
 ; Z-Probe
 M558 K0 P5 C"!^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds
+M558 K1 P8 C"^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds -- not working currently
 G31 K0 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
+G31 K1 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
 
 ; define mesh grid
 M557 X{global.x_axis_min+5,global.x_axis_max+sensors.probes[0].offsets[0]-1} Y{global.y_axis_min+5,global.y_axis_max+sensors.probes[0].offsets[1]-1} P{global.mesh_points}
 ; Heaters
 M308 S0 P"bedtemp" Y"thermistor" T100000 B3950         ; configure sensor 0 as thermistor on pin bedtemp
 M950 H0 C"bed" T0                                      ; create bed heater output on bed and map it to sensor 0
-; M307 H0 R0.130 C894.729:894.729 D43.03 S1 V24.0 B0 I0  old termistor location. 
-M307 H0 R0.353 C380.143:380.143 D6.87 S1 V24.0 B0 I0    ; disable bang-bang mode for the bed heater and set PWM limit
+M307 H0 R0.353 C380.143:380.143 D6.87 S1 V24.0 B0 I0   ; disable bang-bang mode for the bed heater and set PWM limit
 
 M140 H0                                                ; map heated bed to heater 0
 M143 H0 S120                                           ; set temperature limit for heater 0 to 120C
 M143 H0 S120                                           ; set temperature limit for heater 0 to 120C
 M308 S1 P"e0temp" Y"thermistor" T100000 B4725 C7.06e-8 ; configure sensor 1 as thermistor on pin e0temp
 M950 H1 C"e0heat" T1                                   ; create nozzle heater output on e0heat and map it to sensor 1
-;M307 H1 B0 R1.831 C181.5:171.1 D8.66 S1.00 V24.0       ; disable bang-bang mode for heater  and set PWM limit
 M307 H1 R1.669 C204.004:200.981 D10.24 S1.00 V24.0 B0 I0
 
 M143 H1 S280                                           ; set temperature limit for heater 1 to 280C
-
-; M307 H0 R0.130 C894.729:894.729 D43.03 S1.00 V24.0 B0 I0
-; M307 H1 R1.831 C181.500:171.100 D8.66 S1.00 V24.0 B0 I0
 
 ; Fans
 M950 F0 C"fan0" Q500                                   ; create fan 0 on pin fan0 and set its frequency
