@@ -46,7 +46,7 @@ M574 Y2 S3                                             ; configure sensorless en
 M574 Z1 S2                                             ; configure Z-probe endstop for low end on Z
 
 ; Z-Probe
-M558 K0 P5 C"!^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds
+M558 K0 P5 C"!^e0stop" H5 F300 T6000 B1                ; set Z probe type to switch and the dive height + speeds
 G31 K0 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
 
 ; define mesh grid
