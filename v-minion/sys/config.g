@@ -46,20 +46,23 @@ M574 Z1 S2                                             ; configure Z-probe endst
 
 ; Z-Probe
 M558 K0 P5 C"!^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds
-M558 K1 P8 C"^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds -- not working currently
 G31 K0 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
-G31 K1 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
 
 ; define mesh grid
 M557 X{global.x_axis_min+5,global.x_axis_max+sensors.probes[0].offsets[0]-1} Y{global.y_axis_min+5,global.y_axis_max+sensors.probes[0].offsets[1]-1} P{global.mesh_points}
-; Heaters
+
+; Heaters and sensors
+
+; -- Bed
 M308 S0 P"bedtemp" Y"thermistor" T100000 B3950         ; configure sensor 0 as thermistor on pin bedtemp
 M950 H0 C"bed" T0                                      ; create bed heater output on bed and map it to sensor 0
 M307 H0 R0.353 C380.143:380.143 D6.87 S1 V24.0 B0 I0   ; disable bang-bang mode for the bed heater and set PWM limit
 
 M140 H0                                                ; map heated bed to heater 0
-M143 H0 S120                                           ; set temperature limit for heater 0 to 120C
-M143 H0 S120                                           ; set temperature limit for heater 0 to 120C
+M143 H0 S100                                           ; set temperature limit for heater 0 to 100C
+
+
+; -- Hotend
 M308 S1 P"e0temp" Y"thermistor" T100000 B4725 C7.06e-8 ; configure sensor 1 as thermistor on pin e0temp
 M950 H1 C"e0heat" T1                                   ; create nozzle heater output on e0heat and map it to sensor 1
 M307 H1 R1.669 C204.004:200.981 D10.24 S1.00 V24.0 B0 I0
@@ -67,8 +70,11 @@ M307 H1 R1.669 C204.004:200.981 D10.24 S1.00 V24.0 B0 I0
 M143 H1 S280                                           ; set temperature limit for heater 1 to 280C
 
 ; Fans
+; -- part cooling fan
 M950 F0 C"fan0" Q500                                   ; create fan 0 on pin fan0 and set its frequency
 M106 P0 S0 H-1                                         ; set fan 0 value. Thermostatic control is turned off
+
+;-- hotend fan
 M950 F1 C"fan1" Q5000                                  ; create fan 1 on pin fan1 and set its frequency
 M106 P1 S0 H1 T45                                      ; set fan 1 value. Thermostatic control is turned on
 
@@ -77,19 +83,21 @@ M563 P0 D0 H1 F0                                       ; define tool 0
 G10 P0 X0 Y0 Z0                                        ; set tool 0 axis offsets
 G10 P0 R0 S0                                           ; set initial tool 0 active and standby temperatures to 0C
 
-; Custom settings are not defined
-
 ; Miscellaneous
-M918 P1 E4 F100000                                     ; enable screen
+M918 P1 E4 F100000                                     ; enable 12864 screen
 G4 S1                                                  ; wait
 M918 P1 E4 F100000                                     ; enable screen to redraw cleanly
 M572 D0 S0.04                                          ; smidge of pressure advance
 T0                                                     ; select first tool
+
 if global.accelerometer
     M955 P0 C"E.10+E.7" I20                                ; enable accelerometer
 else
     echo "skipping accelerometer configuration"
-G4 S1                                                  ; allow everything to settle
 
-;; InputShaping for X
-; M593 P"EI2" F221 S0.1 L10
+if global.inputshaping
+    ; M593 P"EI2" F221 S0.1 L10                        ; enable inputshaping
+else
+    echo "skipping inputshaping"
+
+G4 S1                                                  ; allow everything to settle

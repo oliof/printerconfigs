@@ -11,6 +11,7 @@ var x_axis_max=90
 var y_axis_max=90
 var z_axis_max=180
 var accelerometer = false
+var inputshaping = false
 
 if !exists(global.probe_x_offset)
   global probe_x_offset = var.probe_x_offset
@@ -66,3 +67,8 @@ if !exists(global.accelerometer)
     global accelerometer = var.accelerometer
 else
     set global.accelerometer = var.accelerometer
+	
+if !exists(global.inputshaping)
+    global inputshaping = var.inputshaping
+else
+    set global.inputshaping = var.inputshaping
