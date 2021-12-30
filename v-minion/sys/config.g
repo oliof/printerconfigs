@@ -22,9 +22,9 @@ M586 P2 S0                                             ; disable Telnet
 M669 K0
 
 ; Drives
-M569 P0 S0                                             ; physical drive 0 (X) goes backwards using TMC2209 driver timings
-M569 P1 S1                                             ; physical drive 1 (Y) goes forwards using TMC2209 driver timings
-M569 P2 S0                                             ; physical drive 2 (Z) goes backwards using TMC2209 driver timings
+M569 P0 S0 V5                                          ; physical drive 0 (X) goes backwards using TMC2209 driver timings, stealthChop
+M569 P1 S1 V5                                          ; physical drive 1 (Y) goes forwards using TMC2209 driver timings, stealthChop
+M569 P2 S0 V5                                          ; physical drive 2 (Z) goes backwards using TMC2209 driver timings, stealthChop
 M569 P3 S1 D2                                          ; physical drive 3 (E) goes forwards using TMC2209 driver timings, spreadCycle
 M584 X0 Y1 Z2 E3                                       ; set drive mapping
 M350 X16 Y16 Z16 E16 I1                                ; configure microstepping with interpolation
