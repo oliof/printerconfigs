@@ -3,7 +3,6 @@
 
 M400                   ; Wait for all moves to stop
 G91                    ; Use relative moves
-M569 P0 V30            ; disable spreadcycle switching
 G1 H2 X0.1             ; Move X a small amount to enable
 M400                   ; Wait for all moves to stop
 G4 P200                ; Delay to allow TMC to detect stopped state
@@ -18,7 +17,6 @@ G1 H1 X200 F3600       ; Move to end of axis
 G1 X-1 F3000           ; Move away from stop and clear stall
 G1 H2 Z-5 F2500        ; Return Z to original position
 M400                   ; Wait for all moves to stop
-M569 P0 V2000          ; re-enable spreadcycle switching
 G90                    ; Absolute positioning
 M913 X100              ; Back to full power
 M915 P0 S20 H200 R1    ; Report any stalls
