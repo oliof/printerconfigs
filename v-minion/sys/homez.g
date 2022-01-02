@@ -1,7 +1,7 @@
 ; homez.g
 ; called to home the Z axis
 ; set z probe values for homing z
-M558 P5 C"!^e0stop" H20 F300 T6000 
+M558 P5 C"!^e0stop" H20 F600 T6000 
 G31 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}
 
 G91                ; relative positioning
