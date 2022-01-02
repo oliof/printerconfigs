@@ -12,13 +12,33 @@
 ; M557 X-140:140 Y-140:140 P4    ; define mesh grid
 ; G29                            ; probe the bed and enable compensation
 
-M561
-M400
-G30 P0 X-130 Y-60 Z-99999 ; probe near a leadscrew
-M400
-G30 P1 X0 Y110 Z-99999 ; probe near a leadscrew
-M400
-G30 P2 X95 Y-60 Z-99999 S3 ; probe near a leadscrew and calibrate 3 motors
-M400
+M290 R0 S0    ;  clear baby stepping
+M561          ;  reset all bed adjustments
+M400          ;  flush move queue
 
+if !move.axes[0].homed or !move.axes[1].homed or !move.axes[2].homed
+  echo "not all axes homed, homing axes first"
+  G28
+
+
+while true
+  if iterations = 4
+    abort "Auto calibration repeated attempts ended, final deviation", move.calibration.final.deviation ^ "mm"
+  G30 P0 X-92 Y-92 Z-99999 ; probe near a leadscrew
+  if result != 0
+    continue
+  G30 P1 X4  Y52  Z-99999 ; probe near a leadscrew
+  if result != 0
+    continue
+  G30 P2 X52  Y-92 Z-99999 S3 ; probe near a leadscrew and calibrate 3 motors
+  if result != 0
+    continue
+  if move.calibration.initial.deviation <= 0.01
+    break
+  echo "Repeating calibration because deviation is too high (" ^ move.calibration.initial.deviation ^ "mm)"
+; end loop
+echo "Auto calibration successful, deviation", move.calibration.final.deviation ^ "mm"
+G0 X0 Y0 Z10 F7200
+; rehome Z as the absolute height of the z plane may have shifted
+G28 Z
 
