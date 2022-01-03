@@ -30,8 +30,8 @@ M584 X0 Y1 Z2 E3                                       ; set drive mapping
 M350 X16 Y16 Z16 E16 I1                                ; configure microstepping with interpolation
 M92 X160.00 Y160.00 Z3200.00 E690.00                   ; set steps per mm
 M566 X900.00 Y900.00 Z60.00 E3600.00                   ; set maximum instantaneous speed changes (mm/min)
-M203 X6000.00 Y6000.00 Z600.00 E6000.00                ; set maximum speeds (mm/min)
-M201 X3000.00 Y3000.00 Z20.00 E6000.00                 ; set accelerations (mm/s^2)
+M203 X6000.00 Y6000.00 Z900.00 E6000.00                ; set maximum speeds (mm/min)
+M201 X3000.00 Y3000.00 Z200.00 E6000.00                ; set accelerations (mm/s^2)
 M201.1 X300.0 Y300.0 Z100.0 E500.0                     ; accelerations for special moves
 M906 X1200 Y1200 Z1200 E700 I50                        ; set motor currents (mA) and motor idle factor in per cent
 M84 S30                                                ; Set idle timeout
