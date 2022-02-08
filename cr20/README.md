@@ -1,4 +1,4 @@
-Creality CR-20 running on Duet 2 Mini 5+ in an [IDEX
+Creality CR-20 running on Duet 3 Mini 5+ in an [IDEX
 configuration](https://www.enderidex.com).
 
 These configuration files are for RepRapFirmware 3.4b
