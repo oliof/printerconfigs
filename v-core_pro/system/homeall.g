@@ -1,3 +1,7 @@
+; enable the following two lines for stealthchop tuning
+M17 X Y Z               ; enable XYZ motors
+G4 P150                 ; wait 150ms
+
 M400                    ; wait til stuff stops
 M913 X30 Y30            ; drop motor currents to 30% 
 M201 X1000 Y1000        ; reduce acceleration on X/Y to stop false triggers
@@ -6,8 +10,8 @@ G91                     ; set relative
 G1 Z5 F600 H2           ; clear the bed
 G1 H1 X-400 F4000       ; move left 400mm, stopping at the endstop
 G1 X120 F1200           ; move away from end
-G1 H1 Y400 F4000       ; move 400mm, stopping at the endstop
-G0 Y-20 F1200            ; move away from end
+G1 H1 Y400 F4000        ; move 400mm, stopping at the endstop
+G0 Y-20 F1200           ; move away from end
 G90                     ; back to absolute positioning
 M400                    ; wait again
 M913 X100 Y100          ; motor currents back to 100%
