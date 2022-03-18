@@ -1,0 +1,2 @@
+; home axes
+G28
