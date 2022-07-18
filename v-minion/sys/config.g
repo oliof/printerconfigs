@@ -1,3 +1,4 @@
+
 ; Configuration file for SKR-RFF-E3-v1.1 (firmware version 3)
 ; executed by the firmware on start-up
 ;
@@ -6,7 +7,7 @@
 ; General preferences
 G90                                                    ; send absolute coordinates...
 M83                                                    ; ...but relative extruder moves
-M550 P"minion"                                         ; set printer name
+M550 P"beta minion"                                         ; set printer name
 
 ; global variables for config and macros
 M98 P"variables"
@@ -18,21 +19,20 @@ M586 P1 S0                                             ; disable FTP
 M586 P2 S0                                             ; disable Telnet
 
 ; Kinematics
-
 M669 K0
 
 ; Drives
-M569 P0 S0 V5                                          ; physical drive 0 (X) goes backwards using TMC2209 driver timings, stealthChop
-M569 P1 S1 V5                                          ; physical drive 1 (Y) goes forwards using TMC2209 driver timings, stealthChop
-M569 P2 S0 V5                                          ; physical drive 2 (Z) goes backwards using TMC2209 driver timings, stealthChop
-M569 P3 S1 D2                                          ; physical drive 3 (E) goes forwards using TMC2209 driver timings, spreadCycle
+M569 P0 S0                                             ; physical drive 0 (X) goes backwards using TMC2209 driver timings
+M569 P1 S1                                             ; physical drive 1 (Y) goes forwards using TMC2209 driver timings
+M569 P2 S0                                             ; physical drive 2 (Z) goes backwards using TMC2209 driver timings
+M569 P3 S1 D2                                          ; physical drive 3 (E) goes forwards using TMC2209 driver timings
 M584 X0 Y1 Z2 E3                                       ; set drive mapping
 M350 X16 Y16 Z16 E16 I1                                ; configure microstepping with interpolation
-M92 X160.00 Y160.00 Z3200.00 E690.00                   ; set steps per mm
-M566 X900.00 Y900.00 Z60.00 E3600.00                   ; set maximum instantaneous speed changes (mm/min)
-M203 X6000.00 Y6000.00 Z900.00 E6000.00                ; set maximum speeds (mm/min)
+M92 X160.00 Y160.00 Z3200.00 E690.00                   ; set steps per mm; Z is set for TR8x2 leadscrew, adjust accordingly
+M566 X900.00 Y900.00 Z60.00 E300.00                    ; set maximum instantaneous speed changes (mm/min)
+M203 X12000.00 Y12000.00 Z1200.00 E12000.00                ; set maximum speeds (mm/min)
 M201 X3000.00 Y3000.00 Z200.00 E6000.00                ; set accelerations (mm/s^2)
-M201.1 X300.0 Y300.0 Z100.0 E500.0                     ; accelerations for special moves
+M201.1 X200.0 Y200.0 Z100.0 E500.0                     ; accelerations for special moves
 M906 X1200 Y1200 Z1200 E700 I50                        ; set motor currents (mA) and motor idle factor in per cent
 M84 S30                                                ; Set idle timeout
 
@@ -41,13 +41,14 @@ M208 X{global.x_axis_min} Y{global.y_axis_min} Z{global.z_axis_min} S1 ; set axi
 M208 X{global.x_axis_max} Y{global.y_axis_max} Z{global.z_axis_max} S0 ; set axis minima
 
 ; Endstops
-M574 X2 S3                                             ; configure sensorless endstop for high end on X
-M574 Y2 S3                                             ; configure sensorless endstop for high end on Y
-M574 Z1 S2                                             ; configure Z-probe endstop for low end on Z
+M574 X1 S1 P"^xstop"                                   ; configure NC endstop switch for low end on X
+M574 Y1 S1 P"^ystop"                                   ; configure NC endstop for low end on Y
+M574 Z1 S2                                             ; configure Z probe for low end on Z
+
 
 ; Z-Probe
-M558 K0 P5 C"!^e0stop" H5 F300 T6000 B1                ; set Z probe type to switch and the dive height + speeds
-G31 K0 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
+M558 P5 C"^e0stop" H5 F600 T6000 B1                 ; set Z probe type to switch and the dive height + speeds SupCR3D probe
+G31 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
 
 ; define mesh grid
 M557 X{global.x_axis_min+5,global.x_axis_max+sensors.probes[0].offsets[0]-1} Y{global.y_axis_min+5,global.y_axis_max+sensors.probes[0].offsets[1]-1} P{global.mesh_points}
@@ -55,29 +56,37 @@ M557 X{global.x_axis_min+5,global.x_axis_max+sensors.probes[0].offsets[0]-1} Y{g
 ; Heaters and sensors
 
 ; -- Bed
-M308 S0 P"bedtemp" Y"thermistor" T100000 B3950         ; configure sensor 0 as thermistor on pin bedtemp
-M950 H0 C"bed" T0                                      ; create bed heater output on bed and map it to sensor 0
-M307 H0 R0.353 C380.143:380.143 D6.87 S1 V24.0 B0 I0   ; disable bang-bang mode for the bed heater and set PWM limit
+M308 S0 P"bedtemp" Y"thermistor" T100000 B3950          ; configure sensor 0 as thermistor on pin bedtemp
+M950 H0 C"bed" T0                                       ; create bed heater output on bed and map it to sensor 0
+M307 H0 R0.664 K0.476:0.000 D1.92 E1.35 S1.00 B0 V24.0  ; disable bang-bang mode for the bed heater and set PWM limit
 
-M140 H0                                                ; map heated bed to heater 0
-M143 H0 S100                                           ; set temperature limit for heater 0 to 100C
+M140 H0                                                 ; map heated bed to heater 0
+M143 H0 S100                                            ; set temperature limit for heater 0 to 100C
 
 
 ; -- Hotend
-M308 S1 P"e0temp" Y"thermistor" T100000 B4725 C7.06e-8 ; configure sensor 1 as thermistor on pin e0temp
-M950 H1 C"e0heat" T1                                   ; create nozzle heater output on e0heat and map it to sensor 1
-M307 H1 R1.669 C204.004:200.981 D10.24 S1.00 V24.0 B0 I0
+M308 S1 P"e0temp" Y"thermistor" T100000 B3950           ; configure sensor 1 as thermistor on pin e0temp
+M950 H1 C"e0heat" T1                                    ; create nozzle heater output on e0heat and map it to sensor 1
+M307 H1 R4.213 K0.539:0.197 D7.02 E1.35 S1.00 B0 V24.0
 
-M143 H1 S280                                           ; set temperature limit for heater 1 to 280C
+M143 H1 S300                                            ; set temperature limit for heater 1 to 280C
+
+; Sensors
+; -- MCU and driver temp for display in DWC. Driver temp is 'virtual' only but can be used to thermostatically control
+; -- an enclosure fan if you have a free controllable fan input.
+M308 S10 Y"mcu-temp" A"MCU"
+M308 S11 Y"drivers"  A"Stepper Drivers"                
+
+
 
 ; Fans
 ; -- part cooling fan
-M950 F0 C"fan0" Q500                                   ; create fan 0 on pin fan0 and set its frequency
+M950 F0 C"!fan0" Q25000                                ; create fan 0 on pin fan0 and set its frequency, inverted PWM
 M106 P0 S0 H-1                                         ; set fan 0 value. Thermostatic control is turned off
 
 ;-- hotend fan
 M950 F1 C"fan1" Q5000                                  ; create fan 1 on pin fan1 and set its frequency
-M106 P1 S0 H1 T45                                      ; set fan 1 value. Thermostatic control is turned on
+M106 P1 S0 H1 T45                                ; set fan 1 value. Thermostatic control is turned on
 
 ; Tools
 M563 P0 D0 H1 F0                                       ; define tool 0
@@ -88,7 +97,9 @@ G10 P0 R0 S0                                           ; set initial tool 0 acti
 M918 P1 E4 F100000                                     ; enable 12864 screen
 G4 S1                                                  ; wait
 M918 P1 E4 F100000                                     ; enable screen to redraw cleanly
-M572 D0 S0.04                                          ; smidge of pressure advance
+M572 D0 S0.03                                          ; smidge of pressure advance
+; M207 S2.4 F3600 T1800 Z0.05                            ; retract settings (Orbiter with NF Zone hotend)
+M207 S1.4 F2400 T1200 Z0.05
 T0                                                     ; select first tool
 
 if global.accelerometer
@@ -99,6 +110,7 @@ else
 if global.inputshaping
     ; M593 P"EI2" F221 S0.1 L10                        ; enable inputshaping
 else
-    echo "skipping inputshaping"
+    echo "skipping inputshaping"                                
+
 
 G4 S1                                                  ; allow everything to settle
