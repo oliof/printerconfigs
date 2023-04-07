@@ -91,7 +91,7 @@ G10 P2 X110 Y0 U0 S0 R0                              ; tool offsets for copy mod
 M567 P2 E1:1                                         ; set mix ratio 100% on both extruders for copy mode
 ; -- mirror mode 
 M563 P3 S"mirror mode" D0:1 H1:2 X0:3 F0:2           ; tool for mirror mode
-G10 P3 X110 Y0 U0 S0 R0                            ; tool offset for mirror mode (flipped X offset)
+G10 P3 X85 Y0 U0 S0 R0                            ; tool offset for mirror mode (flipped X offset)
 M567 P3 E1:1                                         ; set mix ratio 100% on both extruders for mirror mode
 
 

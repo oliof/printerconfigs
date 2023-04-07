@@ -1,3 +1,4 @@
+; homeall.g
 if (move.axes[0].homed && move.axes[1].homed && move.axes[2].homed && move.axes[3].homed)
   echo "already homed, skipping" 
 else
