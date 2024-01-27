@@ -8,40 +8,40 @@ G30
 if ! move.axes[2].homed
   abort
 
-; -- wait a short time to settle things
-G4 P200
+; -- wait a hot second
+G4 S1 
 ; -- invert z probe compared to normal bed probing operations
-M558 P5 C"^e0stop" H5 F300 T6000 
+M558 P5 C"!^e0stop" H5 F600 T6000 ; SupCR3D probe
 G31 P500 X-30 Y-15 Z{global.probe_z_offset}
-; -- wait a short time to settle things
-G4 P200
+; -- wait a hot second
+G4 S1
 ; -- configure Y to have z probe as endstop on the low end
 M574 Y2 S2
 ; -- absolute moves
 G90
 ; -- go to low z value
-G0 Z1
+G0 Z{global.probe_z_offset-0.1}
 ; -- relative moves
 G91
 ; -- home towards low edge of the X bed
 G1 H1 Y200 F3000
-G4 P200
+G4 S1
 ; -- move a bit onto the bed again
 G1 Y-10 F3000
 ; -- re-home slowly
 G1 H1 Y200 F300
-; -- wait a short time to settle things
-G4 P200
+; -- wait a hot second
+G4 S1
 ; -- z probe > offset not applied, force position
-G0 Y-15
+G0 Y{global.probe_y_offset}
 G92 Y90
 
 ; -- re-set z probe to normal mode
-M558 P5 C"!^e0stop" H5 F300 T6000 
+M558 P5 C"^e0stop" H5 F600 T6000
 G31 P500 X-30 Y-15 Z{global.probe_z_offset}
 ; -- absolute mode
 G90
-; -- move to center of bed
-G0 Y0 Z10 F1200
+; -- go back to center of the bed
+G0 Y0 Z5 F1200
 ; -- re-home Z for good measure
-G30
+M98 P"homez.g"

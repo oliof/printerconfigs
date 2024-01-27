@@ -1,7 +1,3 @@
-
-; -- lie about print head location so I can probe Z 
-; -- dangerous!
-G92 X0 Y0
 ; -- probe bed. If we can't, something is amiss.
 G30
 
@@ -12,8 +8,8 @@ if ! move.axes[2].homed
 
 G4 P200
 ; -- invert z probe compared to normal bed probing operations
-M558 P5 C"^e0stop" H5 F300 T6000 
-G31 P500 X-30 Y-15 Z{global.probe_z_offset}
+M558 P5 C"!^e0stop" H5 F600 T6000 
+G31 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}
 
 ; -- wait a short time to settle things
 G4 P200
@@ -22,7 +18,7 @@ M574 X1 S2
 ; -- absolute moves
 G90
 ; -- go to low z value
-G0 Z1
+G0 Z{global.probe_z_offset-0.2}
 ; -- relative moves
 G91
 ; -- home towards low edge of the X bed
@@ -32,16 +28,20 @@ G4 P200
 G1 X10 F3000
 ; -- re-home slowly
 G1 H1 X-200 F300
-G4 P200
-; -- z probe X offset not applied, force position
-G92 X-60
 
+; -- z probe X offset not applied, force position
+; G92 X{global.x_axis_min}
+M400
+M117 "Check position!"
+G4 S2
+ 
 ; -- re-set z probe to normal mode
-M558 P5 C"!^e0stop" H5 F300 T6000 
-G31 P500 X-30 Y-15 Z{global.probe_z_offset}
+M558 P5 C"^e0stop" H5 F600 T6000 
+G31 P500 X-30 Y-15 Z{global.probe_z_offset}G31 P500 X{global.probe_x_offset} Y{global.probe_y_offset} Z{global.probe_z_offset}
+
 ; -- absolute mode
 G90
 ; -- move to center of bed
-G0 X0 Z10 F1200
+G0 X0 Z5 F1200
 ; -- re-home Z for good measure
-G30
+M98 P"homez.g"

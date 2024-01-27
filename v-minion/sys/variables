@@ -1,17 +1,23 @@
 ; global configuration variables
 
-var probe_x_offset = -30
-var probe_y_offset = -15
-var probe_z_offset = 1.6
-var mesh_points = 7
-var x_axis_min=-90
-var y_axis_min=-90
-var z_axis_min=0
-var x_axis_max=90
-var y_axis_max=90
-var z_axis_max=180
-var accelerometer = false
-var inputshaping = false
+; X/Y offsets from EVA/RatOS configuration
+; cf https://github.com/Rat-OS/RatOS-configuration/blob/44dd1588acc24b5fc611a644ee19768f48302246/z-probe/probe.cfg#L18 
+var probe_x_offset = -27.8  
+var probe_y_offset = -12
+var probe_z_offset = 1.19    ; SupCR3D PEI
+; var probe_z_offset = 0.53    ; SupCR3D FR2
+;var probe_z_offset = 0.56      ; SupCR3D FR2 DragonFly BMO CHT 0.5
+var mesh_points =      3       ; quick 3x3 mesh
+var x_axis_min=      -88.5        
+var y_axis_min=      -90       ; safety for beta
+var z_axis_min=        0   
+var x_axis_max=       88.5
+var y_axis_max=       90
+var z_axis_max=      180
+var accelerometer  = false     ; only enable when an accelerometer is mounted
+var inputshaping   = false     ; only enable when ringing frequency has been determined
+
+; create globals if they don't exist, assign otherwise
 
 if !exists(global.probe_x_offset)
   global probe_x_offset = var.probe_x_offset
@@ -21,7 +27,7 @@ else
 if !exists(global.probe_y_offset)
     global probe_y_offset = var.probe_y_offset
 else
-    set global.probe_y_offset = var.probe_y_offset
+    set global.probe_x_offset = var.probe_x_offset
 	
 if !exists(global.probe_z_offset)
     global probe_z_offset = var.probe_z_offset
@@ -69,6 +75,6 @@ else
     set global.accelerometer = var.accelerometer
 	
 if !exists(global.inputshaping)
-    global inputshaping = var.inputshaping
+    global inputshaping= var.inputshaping
 else
     set global.inputshaping = var.inputshaping

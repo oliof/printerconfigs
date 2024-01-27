@@ -1,0 +1,4 @@
+echo "probe z offset should be " ^global.probe_z_offset ^", is " ^ sensors.probes[0].offsets[2] 
+M558 P5 C"!^e0stop" H5 F300 T6000                      ; set Z probe type to switch and the dive height + speeds
+G31 P500 X-30 Y-15 Z{global.probe_z_offset}            ; set Z probe trigger value, offset and trigger height
+echo "probe z offset should be " ^global.probe_z_offset ^", is " ^ sensors.probes[0].offsets[2] 

@@ -19,7 +19,12 @@ leds.diagnostic = PE.2;
 heat.tempSensePins = {bedtemp, e0temp}; //Max of 3 entries
 //heat.spiTempSensorCSPins = { }; //Max of 2 entries
 
-	//ESP Settings
+// Accelerometer settings
+
+SPI5.pins = { B.1, B.2, E.11 }
+accelerometer.spiChannel = 5
+
+//ESP Settings
 8266wifi.espDataReadyPin = PA.6;
 8266wifi.TfrReadyPin = PA.7;
 8266wifi.espResetPin = PA.4;

@@ -1,0 +1,8 @@
+M302 P 1                  ; allow cold extrudes
+M83                       ; relative moves
+
+while iterations < 100    ; run this a thousand times
+  G0 E200 F2000           ; 50mm in one direction
+  G0 E-200 F2000           ; 50mm in the other
+
+M117 P"finished breaking in papilio"

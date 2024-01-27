@@ -1,0 +1,6 @@
+M671 X-80:85:85 Y0:85:-85
+G28 Z
+G30 P0 X-70  Y0 Z-99999 ; probe near an adjusting screw
+G30 P1 X75  Y65 Z-99999 ; probe near an adjusting screw
+G30 P2 X75 Y-70 Z-99999 S3 ; probe near an adjusting screw and report adjustments needed
+G28 Z
