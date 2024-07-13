@@ -1,8 +1,8 @@
-; after enabling tool 0, prepare toolhead to continue printing
+; after enabling tool 1, prepare toolhead to continue printing
 M400
-M116 P0           ; wait for tool 0 heaters to reach operating temperature
+M116 P1           ; wait for tool 1 heaters to reach operating temperature
 M83               ; relative extruder movement
-G1 E0.5 F3600     ; extrude 2mm
+G1 E0.5 F3600     ; extrude 0.5mm
 M400
 G1 R2 X0 Y0 Z2    ; restore position 2mm above
 G1 R2 X0 Y0 Z0    ; restore position

@@ -15,58 +15,57 @@ M586 P1 S0                                           ; Disable FTP
 M586 P2 S0                                           ; Disable Telnet
 
 ; Drives 
-M569 P0 S1                                           ; Physical drive 0 goes forwards (U)
+; M569 P0 S1                                           ; Physical drive 0 goes forwards (U)
 M569 P1 S1                                           ; Physical drive 1 goes forwards (Y)
 M569 P2 S0                                           ; Physical drive 2 goes backwards (X)
 M569 P3 S0                                           ; Physical drive 3 goes backwards (Z left)
 M569 P4 S0                                           ; Physical drive 4 goes backwards (Z right)
-M569 P124.0 S0                                       ; Physical drive 5 goes backwards (E0)
-M569 P125.0 S0                                       ; Physical drive 6 goes backwards (E1)
+M569 P20.0 S1                                        ; Physical drive 5 goes forward (E0, rrf36)
+M569 P21.0 S1                                        ; Physical drive 6 goes backwards (E1)
 
-M584 X1 Y2 Z3:4 U0 E124.0:125.0                      ; X Y Z:Z U E0:E1
+M584 X1 Y2 Z3:4 U0 E20.0:21.0                        ; X Y Z:Z U E0:E1
 M906 X1200 Y1200 Z800 U1200 E600:600 I30             ; Set motor currents (mA) and motor idle factor in per cent
 
 M350 X16 Y16 U16 Z16 E16 I1                          ; Configure microstepping with interpolation
 M92 X80.00 Y80.00 U80 Z1600.00 E631:631              ; Set steps per mm
-M566 X360.00 Y210.00 Z18 E300.00 P1                  ; Set maximum instantaneous speed changes (mm/min)
+M566 X210.00 Y210.00 U210.00 Z18 E300.00 P1                  ; Set maximum instantaneous speed changes (mm/min)
 M203 X9000.00 Y9000.00 U9000.00 Z600.00 E6000.00     ; Set maximum speeds (mm/min)
-M201 X7500.00 Y4000.00 U7500.00 Z100.00 E6000.00     ; Set accelerations (mm/s^2)
-M204 P20000 T20000                                   ; Set print and travel acceleration maximums
-M84 S30                                              ; Set idle timeout
+M201 X3000.00 Y3000.00 U3000.00 Z100.00 E3000.00     ; Set accelerations (mm/s^2)
+                                             ; Set idle timeout
 
 ; Axis Limits
-M208 X-139.8:105 Y-105:110 U-80:140.7 Z0:200         ; axis limits. Move Z uprights back to regain Y.      
+M208 X-43:210 Y-110:110 U30:269 Z0:170         ; axis limits. Limit Z due to tall direct extruder.      
 
 ; Endstops  
-M574 X1 S1 P"124.io0.in"                             ; X endstop connected to Z probe port on toolboard
+M574 X1 S1 P"^20.io1.in"                             ; X endstop connected to Z probe port on toolboard
 M574 Y1 S1 P"io4.in"                             
 M574 Z1 S1 P"!io5.in+!io6.in"
-M574 U2 S1 P"125.io0.in"                             ; U endstop connected to Z probe port on toolboard
+M574 U2 S1 P"^21.io1.in"                             ; U endstop connected to Z probe port on toolboard
 
 ; Thermistors
-M308 S0 P"temp0" Y"thermistor" A"bed" T100000 B3950  
-M308 S1 P"124.temp0" Y"thermistor" A"left" B4725 C7.06e-8
-M308 S2 P"125.temp0" Y"thermistor" A"right" B4725 C7.06e-8
+M308 S0 P"temp0" Y"thermistor" A"Bed" T100000 B3950  
+M308 S1 P"20.temp0" Y"thermistor" A"Left" B4725 C7.06e-8
+M308 S2 P"21.temp0" Y"thermistor" A"Right" B4725 C7.06e-8
 
 ; Heaters
 M950 H0 C"out0" T0                                   ; heater 0 uses the OUT0 pin, sensor 0
-M950 H1 C"124.out0" T1                               ; heater 1 uses the out0 pin and temp0 on the toolboard #124
-M950 H2 C"125.out0" T2                               ; heater 2 uses the out0 pin and remp0 on the toolboard #125
+M950 H1 C"20.out0" T1                                ; heater 1 uses the out0 pin and temp0 on the toolboard #124
+M950 H2 C"21.out0" T2                                ; heater 2 uses the out0 pin and remp0 on the toolboard #125
 
 M307 H1 B0 S1.0
 M307 H2 B0 S1.0
 
 
-; temperature limits
+; Temperature limits
 M143 H0 S115
 M143 H1 S290
 M143 H2 S290
 
 ; Fans
-M950 F0 C"124.out2"                                  ; x part cooling fan
-M950 F1 C"124.out3"                                  ; x heatsink fan
-M950 F2 C"125.out2"                                  ; u part cooling fan
-M950 F3 C"125.out3"                                  ; u heatsink fan
+M950 F0 C"20.out1"                                   ; x part cooling fan
+M950 F1 C"20.out2"                                   ; x heatsink fan
+M950 F2 C"21.out1"                                   ; u part cooling fan
+M950 F3 C"21.out2"                                   ; u heatsink fan
   
 M106 P0 C"left part fan" H-1 S0                      ; part cooling fan is not thermostatically controlled
 M106 P1 C"left head fan" H1 T45                      ; print head fan is thermostatically controlled
@@ -75,8 +74,7 @@ M106 P3 C"right head fan" H2 T45                     ; print head fan is thermos
 
 
 ; Bed and tools
-M140 H0
-; bed heater
+M140 H0                                              ; bed heater
 ; first toolhead (left)
 M563 P0 S"left"  D0 H1 X0 F0                         ; first tool, X head
 G10 P0 X0 Y0 Z0 S0 R0                                ; set tool 0 offsets and temperatures
@@ -86,29 +84,48 @@ M563 P1 S"right"  D1 H2 X3 F2                        ; second tool, U head
 G10 P1 X0 Y0 Z0 S0 R0                                ; tool offsets
 
 ; -- copy mode
-M563 P2 S"copy mode"  D0:1 H1:2 X0:3 F0:2            ; tool for copy mode
-G10 P2 X110 Y0 U0 S0 R0                              ; tool offsets for copy mode
+M563 P2 S"copy mode"  D0:1 H1:2 X0:3 F0:2            ; tool for copy mode, filament drives 0 and 1, heaters 1 and 2, fans 0 and 2
+G10 P2 X5 Y0 U-105 S0 R0                             ; tool offsets for copy mode
 M567 P2 E1:1                                         ; set mix ratio 100% on both extruders for copy mode
+
 ; -- mirror mode 
 M563 P3 S"mirror mode" D0:1 H1:2 X0:3 F0:2           ; tool for mirror mode
-G10 P3 X110 Y0 U0 S0 R0                            ; tool offset for mirror mode (flipped X offset)
+G10 P3 X0 Y0 U-215 S0 R0                           ; tool offset for mirror mode (flipped X offset)
 M567 P3 E1:1                                         ; set mix ratio 100% on both extruders for mirror mode
 
 
-; Pressure Advance and InputShaping
+; Firmware Retract
 
+M207 S1 F3000
+
+; Pressure Advance
 M572 D0 S0.02
-M572 D1 S0.02
+;M572 D1 S0.02
 
-M593 P"mzv" F43 S0
+
+; Toolboard accelerometer
+
+M955 P20.0 I12
+M593 P"ZVD" F74 S0
+
+; Toolboard and Mainboard temp sensors
+
+M308 S3 P"20.temp1" Y"thermistor" A"Left Toolboard" T100000 B4092
+M308 S4 P"21.temp1" Y"thermistor" A"Right Toolboard" T100000 B4092
+M308 S5 Y"mcu-temp" A"MCU" ; configure sensor 3 as on-chip MCU temperature sensor
 
 
 ; enable display
 
-M918 P2 E-4
-G4 S1  ; pause
-M918 P2 E-4
-M150 X2 R255 U255 B255 S3 ; set all 3 LEDs to white
+M98 P"0:/macros/enable-display.g"
 
-; PID tune
+; MFM filament sensor
+
+M591 D0 P3 C"20.io2.in" S0
+
+; PID tune values in config-override.g
 M501
+
+; Scanning Z Probe -- DIY Sammy C21 and LDC1612
+
+ M558 K0 P11 C"120.i2c.ldc1612" F25000 T30000 
